@@ -23,14 +23,10 @@ class App extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.searchQuery !== this.state.searchQuery) {
-      if (this.state.searchQuery.trim() === '') {
-        return;
-      } else {
-        this.fetchImages();
-        this.setState({ status: 'resolved' });
-        if (this.state.images.length === 0) {
-          this.setState({ status: 'idle' });
-        }
+      this.fetchImages();
+      this.setState({ status: 'resolved' });
+      if (this.state.images.length === 0) {
+        this.setState({ status: 'idle' });
       }
     }
   }
@@ -53,7 +49,7 @@ class App extends Component {
     imagesApi
       .fetchImages(options)
       .then(images => {
-        if (images.length === 0) {
+        if (images.length === 0 || this.state.searchQuery.trim() === '') {
           this.setState({ error: 'No any picture', status: 'rejected' });
         } else {
           this.setState(prevState => ({
